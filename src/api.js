@@ -1,10 +1,18 @@
 import axios from 'axios'
 
-const apiBaseUrl = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')
+const configuredApiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL
+const defaultApiUrl = import.meta.env.PROD
+  ? 'https://limguangco-lava.onrender.com/api'
+  : '/api'
+const configuredApiBaseUrl = (configuredApiUrl || defaultApiUrl).replace(/\/+$/, '')
+const apiBaseUrl = configuredApiBaseUrl.endsWith('/api')
+  ? configuredApiBaseUrl
+  : `${configuredApiBaseUrl}/api`
 const authStorageKey = 'lavalust-auth'
 
 const apiClient = axios.create({
   baseURL: apiBaseUrl,
+  withCredentials: true,
   headers: { 'Content-Type': 'application/json' },
 })
 
